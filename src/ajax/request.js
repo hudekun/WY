@@ -3,7 +3,7 @@ import axios from 'axios'
 function get(url, params={}){
     return new Promise((resolve, reject)=>{
         axios.get(url, {
-            baseURL: 'http://localhost:9090',
+            // baseURL: 'http://localhost:8080',
             params: {
                 ...params,
                 _: new Date().getTime()
