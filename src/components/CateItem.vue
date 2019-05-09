@@ -26,7 +26,7 @@ export default {
     },
     methods: {
         goDetail(){
-            this.$router.push(`${this.$route.fullPath}/detail/${this.value.id}`);
+            // this.$router.push(`${this.$route.fullPath}/detail/${this.value.id}`);
         }
     }
 }

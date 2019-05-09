@@ -1,101 +1,103 @@
 <template>
-<div id="home" class="page">
-    <!-- 头部 -->
-    <header class="header">
-        <div class="logo"><img src="../../assets/logo.png"/></div>
-        <div class="search"><van-icon name="search" />搜索商品，共{{total}}款好物</div>
-        <div class="login">登录</div>
-    </header>
-    <!-- 菜单 -->
-    <home-menu @menuChange="handleMenuChange"></home-menu>
-    <!-- 推荐内容 -->
-    <app-scroll v-show="selectIndex===0" class="content main-content">
-        <!-- 轮播图 -->
-        <div class="swiper-container banner">
-            <div class="swiper-wrapper">
-                <div class="swiper-slide" v-for="banner in bannerList" :key="banner.id">
-                    <img :src="banner.picUrl"/>
+<div>
+    <div id="home" class="page">
+        <!-- 头部 -->
+        <header class="header">
+            <div class="logo"><img src="../../assets/logo.png"/></div>
+            <div class="search"><van-icon name="search" />搜索商品，共{{total}}款好物</div>
+            <div class="login">登录</div>
+        </header>
+        <!-- 菜单 -->
+        <home-menu @menuChange="handleMenuChange"></home-menu>
+        <!-- 推荐内容 -->
+        <app-scroll v-show="selectIndex===0" class="content main-content">
+            <!-- 轮播图 -->
+            <div class="swiper-container banner">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide" v-for="banner in bannerList" :key="banner.id">
+                        <img :src="banner.picUrl"/>
+                    </div>
                 </div>
+                <div class="swiper-pagination"></div>
             </div>
-            <div class="swiper-pagination"></div>
-        </div>
-        <!-- 协议 -->
-        <ul class="policy">
-            <li class="policy-item" v-for="(item, index) in policiy" :key="index">
-                <img :src="item.icon"/>
-                <span>{{item.name}}</span>
-            </li>
-        </ul>
-        <!-- 分类 -->
-        <ul class="cate-list">
-            <li class="cate-item" v-for="cateItem in cateList" :key="cateItem.name">
-                <img :src="cateItem.picUrl"/>
-                <p>{{cateItem.name}}</p>
-            </li>
-        </ul>
-        <!-- 品牌直供 -->
-        <div class="brand module">
-            <h2 class="title">
-                <b>品牌制造商直供</b>
-                <span>更多</span>
-            </h2>
-            <ul class="brand-list">
-                <li class="brand-item" v-for="item in brand" :key="item.id">
-                    <img :src="item.picUrl"/>
-                    <h3>{{item.name}}</h3>
-                    <p>{{item.floorPrice}}元起<span v-if="item.newOnShelf">上新</span></p>
+            <!-- 协议 -->
+            <ul class="policy">
+                <li class="policy-item" v-for="(item, index) in policiy" :key="index">
+                    <img :src="item.icon"/>
+                    <span>{{item.name}}</span>
                 </li>
             </ul>
-        </div>
-        <!-- 类目热销榜 -->
-        <div class="hot module">
-            <h2 class="title">
-                <b>类目热销榜</b>
-            </h2>
-            <ul class="hot-list">
-                <li class="hot-item" v-for="item in hotSell" :key="item.name">
-                    <h3>{{item.name}}</h3>
-                    <img :src="item.picUrl"/>
+            <!-- 分类 -->
+            <ul class="cate-list">
+                <li class="cate-item" v-for="cateItem in cateList" :key="cateItem.name"
+                    @click="goCategoryListPage(cateItem)">
+                    <img :src="cateItem.picUrl"/>
+                    <p>{{cateItem.name}}</p>
                 </li>
             </ul>
-        </div>
+            <!-- 品牌直供 -->
+            <div class="brand module">
+                <h2 class="title">
+                    <b>品牌制造商直供</b>
+                    <span>更多</span>
+                </h2>
+                <ul class="brand-list">
+                    <li class="brand-item" v-for="item in brand" :key="item.id">
+                        <img :src="item.picUrl"/>
+                        <h3>{{item.name}}</h3>
+                        <p>{{item.floorPrice}}元起<span v-if="item.newOnShelf">上新</span></p>
+                    </li>
+                </ul>
+            </div>
+            <!-- 类目热销榜 -->
+            <div class="hot module">
+                <h2 class="title">
+                    <b>类目热销榜</b>
+                </h2>
+                <ul class="hot-list">
+                    <li class="hot-item" v-for="item in hotSell" :key="item.name">
+                        <h3>{{item.name}}</h3>
+                        <img :src="item.picUrl"/>
+                    </li>
+                </ul>
+            </div>
 
-    </app-scroll>
-    <!-- 其他的分类内容 -->
-    <app-scroll ref="cateContent" v-show="selectIndex!==0 && !loading" class="content cate-content">
-        <div class="banner">
-            <img :src="homeCateBanner"/>
-        </div>
-        <!-- 列表 -->
-        <div class="list module" v-for="item in homeCateList" :key="item.id">
-            <h3 class="title">{{item.title}}</h3>
-            <h5 class="subtitle">{{item.subtitle}}</h5>
-            <cate-list :list="item.list"></cate-list>
-        </div>
-    </app-scroll>
-    <div class="loading" v-show="loading">
-        <van-loading type="spinner" />
+        </app-scroll>
+
+        <!-- 其他的分类内容 -->
+        <app-scroll ref="cateContent" v-show="selectIndex!==0 && !loading" class="content cate-content">
+            <cate-list-panel :banner="homeCateBanner" :list="homeCateList">
+            </cate-list-panel>
+        </app-scroll>
+
+        
     </div>
+
+    <transition enter-active-class="slideInRight" leave-active-class="slideOutRight">
+        <router-view></router-view>
+    </transition>
+
 </div>
 </template>
 
 <script>
 import {mapState} from 'vuex'
 import HomeMenu from './children/home-menu'
-import CateList from '../../components/CateList'
+import CateListPanel from './children/cate-list-panel'
+import { Toast } from 'vant'
 export default {
     components: {
         [HomeMenu.name]: HomeMenu,
-        [CateList.name]: CateList
+        [CateListPanel.name]: CateListPanel
     },
     data(){
         return {
-            selectIndex: 0,
-            loading: false
+            selectIndex: 0
         }
     },
     computed: {
         ...mapState({
+            loading: state=>state.loading,
             total: state=>state.home.total,
             bannerList: state=>state.home.bannerList,
             policiy: state=>state.home.policiy,
@@ -107,26 +109,41 @@ export default {
         })
     },
     watch: {
-        homeCateBanner(){
+        homeCateList(){
             // 切换分类内容时，重置滚动视图，滚动到顶部
             this.$refs.cateContent.reset();
             // 隐藏loading
-            this.loading = false;
+            this.$store.commit('setLoading', false);
         }
     },
     methods: {
         //菜单栏发生变化
         handleMenuChange(params){
-            console.log('接收到了：', params);
             this.selectIndex = params.index;
             if(this.selectIndex !== 0){
                 //需要展示分类的商品列表
                 // 请求数据
-                this.$store.dispatch('home/requestCateListData', {id: params.id});
+                this.$store.dispatch('home/requestCateListData', {id: params.id, from: 'home'});
                 // 显示loading
-                this.loading = true;
+                this.$store.commit('setLoading', true);
+            }else{
+                // 隐藏loading
+                this.$store.commit('setLoading', false);
             }
 
+        },
+        // 进入分类商品列表页面
+        goCategoryListPage(item){
+            if(item.id){
+                //进入分类商品列表页面
+                this.$router.push(`/home/cate/${item.id}`);
+            }else{
+                //提示用户
+                Toast({
+                    message: '敬请期待',
+                    duration: 1500
+                });
+            }
         }
     },
     created(){
@@ -151,10 +168,17 @@ export default {
             loop: true,
             pagination: '.swiper-pagination'
         });
+        this.mySwiper.hasRefresh = false;
     },
     updated(){
-        // 更新轮播图
-        this.mySwiper.update();
+        if(!this.mySwiper.hasRefresh && this.bannerList.length>0){
+            this.mySwiper.hasRefresh = true;
+            // 更新轮播图
+            this.mySwiper.update();
+            this.mySwiper.reLoop();
+            this.mySwiper.slideTo(1, 0);
+            console.log('更新了');
+        }
     }
 }
 </script>
@@ -368,45 +392,8 @@ export default {
         }
     } 
 }
-.cate-content{
-    .banner{
-        img{
-            width: 100%;
-        }
-    }
-    .list{
-        .title{
-            font-size: 16px;
-            text-align: center;
-        }
-        .subtitle{
-            font-size: 12px;
-            color: #999;
-            text-align: center;
-            font-weight: normal;
-            padding-bottom: 5px;
-        }
-    }
-}
-.loading{
-    width: 100px;
-    height: 100px;
-    background: rgba(0, 0, 0, 0.8);
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    border-radius: 8px;
-    .van-loading{
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 50px;
-        height: 50px;
-    }
-}
 </style>
+
 <style lang="scss">
 #home{
     .banner{

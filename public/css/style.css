@@ -37,4 +37,31 @@ html, body{
     top: 0;
     left: 0;
     bottom: 49px;
+    background: #fff;
+}
+.page.subpage{
+    bottom: 0;
+    z-index: 100;
+}
+@keyframes slideInRight{
+    0%{
+        transform: translateX(100%);
+    }
+    100%{
+        transform: translateX(0);
+    }
+}
+@keyframes slideOutRight{
+    0%{
+        transform: translateX(0);
+    }
+    100%{
+        transform: translateX(100%);
+    }
+}
+.slideInRight{
+    animation: slideInRight 300ms;
+}
+.slideOutRight{
+    animation: slideOutRight 300ms;
 }

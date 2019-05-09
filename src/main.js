@@ -6,7 +6,10 @@ import { Icon, Lazyload, Loading } from 'vant';
 
 // 声明公共组件
 import AppScroll from './components/AppScroll'
+import AppHeader from './components/AppHeader'
 Vue.component(AppScroll.name, AppScroll);
+Vue.component(AppHeader.name, AppHeader);
+
 
 Vue.use(Icon).use(Lazyload).use(Loading);
 

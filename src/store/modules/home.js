@@ -10,7 +10,11 @@ const state = {
     brand: [],
     hotSell: [],
     homeCateBanner: '',
-    homeCateList: []
+    homeCateList: [],
+    cateData: {
+        banner: '',
+        list: []
+    }
 }
 
 const mutations = {
@@ -40,6 +44,9 @@ const mutations = {
     },
     setHomeCateList(state, params){
         state.homeCateList = params.value;
+    },
+    setCateData(state, params){
+        state.cateData = params.value;
     }
 }
 
@@ -80,7 +87,23 @@ const actions = {
     requestHomeCateData(context, params){
         request.get(api.HOME_CATE_API)
         .then(data=>{
-            let newData = data.data.kingKongList.map(({picUrl, text})=>({picUrl, name: text}));
+            let newData = data.data.kingKongList.map(({picUrl, text, schemeUrl})=>{
+                // 解析url中的参数
+                function getQueryString(urlObj, name) {
+                    const reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");//匹配参数
+                    if(urlObj.split("?")[1]){
+                        var r = urlObj.split("?")[1].match(reg);
+                        if (r != null) return unescape(r[2]); return null;
+                    }else{
+                        return null;
+                    }
+                }
+                return {
+                    picUrl, 
+                    name: text,
+                    id: getQueryString(schemeUrl, 'categoryId')
+                }
+            });
             context.commit('setCateList', {value: newData});
         })
     },
@@ -104,7 +127,6 @@ const actions = {
     requestCateListData(context, params){
         request.get(api.HOME_CATE_LIST_API, {id: params.id})
         .then(data=>{
-            console.log(data);
             // 处理数据
             let url = data.data.currentCategory.bannerUrl;
             let newData = data.data.categoryItemList.map(item=>{
@@ -128,8 +150,18 @@ const actions = {
                 return newItem;
             });
             // 提交数据
-            context.commit('setHomeCateBanner', {value: url});
-            context.commit('setHomeCateList', {value: newData});
+            // 判断哪个位置调用的action
+            if(params.from === 'home'){
+                context.commit('setHomeCateBanner', {value: url});
+                context.commit('setHomeCateList', {value: newData});
+            }
+            else if(params.from === 'cate'){
+                context.commit('setCateData', {value: {
+                    banner: url,
+                    list: newData
+                }});
+            }
+            
 
         })
     }
