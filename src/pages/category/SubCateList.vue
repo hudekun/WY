@@ -14,7 +14,7 @@
             </ul>
         </div>
         <!-- 列表 -->
-        <app-scroll class="content" v-show="!loading">
+        <app-scroll ref="scroll" class="content" v-show="!loading">
             <h3 class="title">{{name}}</h3>
             <cate-list :list="listData"></cate-list>
         </app-scroll>
@@ -89,6 +89,8 @@ export default {
             });
             // 显示loading
             this.$store.commit('setLoading', true);
+            // 重置滚动视图到顶部
+            this.$refs.scroll.reset();
         }
     },
     created(){
