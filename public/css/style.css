@@ -42,6 +42,7 @@ html, body{
 .page.subpage{
     bottom: 0;
     z-index: 100;
+    background: #fff;
 }
 @keyframes slideInRight{
     0%{

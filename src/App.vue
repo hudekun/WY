@@ -1,9 +1,10 @@
 <template>
 <div id="app">
 
-
-    <router-view/>
-
+    <keep-alive>
+        <router-view/>
+    </keep-alive>
+    
     <app-tabs/>
 
     <!-- 加载指示器 -->

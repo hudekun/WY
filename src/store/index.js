@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 Vue.use(Vuex);
 
 import home from './modules/home'
+import category from './modules/category'
 
 const store = new Vuex.Store({
     state: {
@@ -14,7 +15,8 @@ const store = new Vuex.Store({
         }
     },
     modules: {
-        home
+        home,
+        category
     }
 });
 

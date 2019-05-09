@@ -7,6 +7,7 @@
             <div class="search"><van-icon name="search" />搜索商品，共{{total}}款好物</div>
             <div class="login">登录</div>
         </header>
+        
         <!-- 菜单 -->
         <home-menu @menuChange="handleMenuChange"></home-menu>
         <!-- 推荐内容 -->

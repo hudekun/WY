@@ -1,9 +1,15 @@
 <template>
-<div class="page subpage" id="category-list">
-    <app-header></app-header>
-    <app-scroll class="content">
-        <cate-list-panel :banner="banner" :list="list"></cate-list-panel>
-    </app-scroll>
+<div class="page subpage">
+    <div class="page subpage" id="category-list">
+        <app-header></app-header>
+        <app-scroll class="content">
+            <cate-list-panel :banner="banner" :list="list"></cate-list-panel>
+        </app-scroll>
+    </div>
+    
+    <transition enter-active-class="slideInRight" leave-active-class="slideOutRight">
+        <router-view></router-view>
+    </transition>
 </div>
 </template>
 

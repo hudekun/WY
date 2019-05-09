@@ -4,7 +4,19 @@ export default {
     children: [
         {
             path: 'cate/:id',
-            component: ()=>import('../pages/home/CategoryList')
+            component: ()=>import('../pages/home/CategoryList'),
+            children: [
+                //商品详情页
+                {
+                    path: 'detail/:id',
+                    component: ()=>import('../pages/common/Detail')
+                }
+            ]
+        },
+        //商品详情页
+        {
+            path: 'detail/:id',
+            component: ()=>import('../pages/common/Detail')
         }
     ]
 }

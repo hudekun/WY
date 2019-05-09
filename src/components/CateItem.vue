@@ -26,7 +26,13 @@ export default {
     },
     methods: {
         goDetail(){
-            // this.$router.push(`${this.$route.fullPath}/detail/${this.value.id}`);
+
+            // this.$router.push(`/home/detail/${this.value.id}`);
+            // this.$router.push(`/home/cate/1005000/detail/${this.value.id}`);
+            // this.$router.push(`/category/sub-cate/1022001/1031001/detail/${this.value.id}`);
+
+            // console.log(this.$route.fullPath);
+            this.$router.push(`${this.$route.fullPath}/detail/${this.value.id}`);
         }
     }
 }

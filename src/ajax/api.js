@@ -56,6 +56,27 @@ const HOME_HOT_SELL_API = '/api/home/catehotsell';
  */
 const HOME_CATE_LIST_API = '/api/home/catelist/itemlist';
 
+/*
+ 分类接口
+ method: GET
+ */
+const CATE_NAV_API = '/api/category/listmap';
+
+/*
+分类数据接口
+method: GET
+params: categoryId(Y)
+*/
+const CATE_MENU_API = '/api/category/listmap/group';
+
+/** 
+ * 分类商品列表接口
+ * method: GET
+ * params: categoryId(Y)     subCategoryId(Y)
+*/
+const CATE_LIST_API = '/api/category/listmap/group/item';
+
+
 export default {
     GOODS_TOTAL_API,
     HOME_MENU_API,
@@ -64,7 +85,10 @@ export default {
     HOME_CATE_API,
     HOME_BRAND_API,
     HOME_HOT_SELL_API,
-    HOME_CATE_LIST_API
+    HOME_CATE_LIST_API,
+    CATE_NAV_API,
+    CATE_MENU_API,
+    CATE_LIST_API
 }
 
 
