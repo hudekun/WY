@@ -178,7 +178,6 @@ export default {
             this.mySwiper.update();
             this.mySwiper.reLoop();
             this.mySwiper.slideTo(1, 0);
-            console.log('更新了');
         }
     }
 }

@@ -4,6 +4,7 @@ Vue.use(Vuex);
 
 import home from './modules/home'
 import category from './modules/category'
+import topic from './modules/topic'
 
 const store = new Vuex.Store({
     state: {
@@ -16,7 +17,8 @@ const store = new Vuex.Store({
     },
     modules: {
         home,
-        category
+        category,
+        topic
     }
 });
 

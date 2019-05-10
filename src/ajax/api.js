@@ -76,6 +76,12 @@ const CATE_MENU_API = '/api/category/listmap/group';
 */
 const CATE_LIST_API = '/api/category/listmap/group/item';
 
+/** 
+ *识物tab列表数据接口
+method: GET
+params: tabId(默认值:9) size(默认值：10) page(默认值：1)
+*/
+const TOPIC_LIST_API = '/api/topic/find/getTabData';
 
 export default {
     GOODS_TOTAL_API,
@@ -88,7 +94,8 @@ export default {
     HOME_CATE_LIST_API,
     CATE_NAV_API,
     CATE_MENU_API,
-    CATE_LIST_API
+    CATE_LIST_API,
+    TOPIC_LIST_API
 }
 
 

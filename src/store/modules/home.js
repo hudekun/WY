@@ -1,4 +1,3 @@
-import axios from 'axios'
 import api from '../../ajax/api'
 import request from '../../ajax/request'
 const state = {
