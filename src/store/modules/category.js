@@ -52,33 +52,31 @@ const actions = {
     },
 
     // 请求分类的商品列表数据
-    requestListData(context, {categoryId, subCategoryId}){
+    async requestListData(context, {categoryId, subCategoryId}){
         //根据id请求商品列表
-        request.get(api.CATE_LIST_API, {
+        let data = await request.get(api.CATE_LIST_API, {
             categoryId,
             subCategoryId
+        });
+        //处理数据
+        let name = data.data.category.frontName;
+        let newData = data.data.itemList.map(value=>{
+            return {
+                id: value.id,
+                title: value.name,
+                picUrl: value.listPicUrl,
+                counterPrice: value.counterPrice,
+                retailPrice: value.retailPrice,
+                place: value.productPlace || (value.colorNum>1 ? `${value.colorNum}色可选` : ''),
+                simpleDesc: value.simpleDesc,
+                itemTagList: value.itemTagList.map(({name})=>name)
+            }
         })
-        .then(data=>{
-            //处理数据
-            let name = data.data.category.frontName;
-            let newData = data.data.itemList.map(value=>{
-                return {
-                    id: value.id,
-                    title: value.name,
-                    picUrl: value.listPicUrl,
-                    counterPrice: value.counterPrice,
-                    retailPrice: value.retailPrice,
-                    place: value.productPlace || (value.colorNum>1 ? `${value.colorNum}色可选` : ''),
-                    simpleDesc: value.simpleDesc,
-                    itemTagList: value.itemTagList.map(({name})=>name)
-                }
-            })
-            //提交
-            context.commit('setListData', {
-                name,
-                data: newData
-            });
-        })
+        //提交
+        context.commit('setListData', {
+            name,
+            data: newData
+        });
     }
 
 }

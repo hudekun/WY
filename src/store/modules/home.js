@@ -52,118 +52,106 @@ const mutations = {
 
 const actions = {
     // 请求首页的商品总数
-    requestTotalData(context, params){
-        request.get(api.GOODS_TOTAL_API)
-        .then(data=>{
-            let total = data.data.total;
-            context.commit('setTotal', {value: total});
-        })
+    async requestTotalData(context, params){
+        // 发送请求
+        let data = await request.get(api.GOODS_TOTAL_API);
+        //得到结果
+        let total = data.data.total;
+        context.commit('setTotal', {value: total});
     },
     // 请求首页的分页的导航数据
-    requestHomeNavData(context, params){
-        request.get(api.HOME_MENU_API)
-        .then(data=>{
-            let newData = data.data.map(({id, name})=>({id, name}));
-            context.commit('setNavList', {value: newData});
-        })
+    async requestHomeNavData(context, params){
+        let data = await request.get(api.HOME_MENU_API);
+        let newData = data.data.map(({id, name})=>({id, name}));
+        context.commit('setNavList', {value: newData});
     },
     //请求首页的分页的轮播图数据
-    requestHomeBannerData(context, params){
-        request.get(api.HOME_BANNER_API)
-        .then(data=>{
-            let newData = data.data.map(({id, picUrl})=>({id, picUrl}));
-            context.commit('setBannerList', {value: newData});
-        });
+    async requestHomeBannerData(context, params){
+        let data = await request.get(api.HOME_BANNER_API);//异步
+        let newData = data.data.map(({id, picUrl})=>({id, picUrl}));
+        context.commit('setBannerList', {value: newData});
     },
     //请求首页的协议数据
-    requestPolicyData(context, params){
-        request.get(api.POLICY_API)
-        .then(data=>{
-            let newData = data.data.map(({desc, icon})=>({icon, name: desc}));
-            context.commit('setPolicy', {value: newData});
-        })
+    async requestPolicyData(context, params){
+        let data = await request.get(api.POLICY_API);
+        let newData = data.data.map(({desc, icon})=>({icon, name: desc}));
+        context.commit('setPolicy', {value: newData});
     },
     // 请求首页的分类数据
-    requestHomeCateData(context, params){
-        request.get(api.HOME_CATE_API)
-        .then(data=>{
-            let newData = data.data.kingKongList.map(({picUrl, text, schemeUrl})=>{
-                // 解析url中的参数
-                function getQueryString(urlObj, name) {
-                    const reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");//匹配参数
-                    if(urlObj.split("?")[1]){
-                        var r = urlObj.split("?")[1].match(reg);
-                        if (r != null) return unescape(r[2]); return null;
-                    }else{
-                        return null;
-                    }
+    async requestHomeCateData(context, params){
+        let data = await request.get(api.HOME_CATE_API);
+        let newData = data.data.kingKongList.map(({picUrl, text, schemeUrl})=>{
+            // 解析url中的参数
+            function getQueryString(urlObj, name) {
+                const reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");//匹配参数
+                if(urlObj.split("?")[1]){
+                    var r = urlObj.split("?")[1].match(reg);
+                    if (r != null) return unescape(r[2]); return null;
+                }else{
+                    return null;
                 }
-                return {
-                    picUrl, 
-                    name: text,
-                    id: getQueryString(schemeUrl, 'categoryId')
-                }
-            });
-            context.commit('setCateList', {value: newData});
-        })
+            }
+            return {
+                picUrl, 
+                name: text,
+                id: getQueryString(schemeUrl, 'categoryId')
+            }
+        });
+        context.commit('setCateList', {value: newData});
     },
     //请求品牌直供数据
-    requestHomeBrandData(context, params){
-        request.get(api.HOME_BRAND_API)
-        .then(data=>{
-            let newData = data.data.map(({id, picUrl, name, floorPrice, newOnShelf})=>({id, picUrl, name, floorPrice, newOnShelf}));
-            context.commit('setBrand', {value: newData});
-        })
+    async requestHomeBrandData(context, params){
+        let data = await request.get(api.HOME_BRAND_API);
+        let newData = data.data.map(({id, picUrl, name, floorPrice, newOnShelf})=>({id, picUrl, name, floorPrice, newOnShelf}));
+        context.commit('setBrand', {value: newData});
+
     },
     //请求类目热销榜
-    requestHomeHotSellData(context, params){
-        request.get(api.HOME_HOT_SELL_API)
-        .then(data=>{
-            let newData = data.data.categoryList.map(({categoryName, picUrl})=>({picUrl, name: categoryName}));
-            context.commit('setHotSell', {value: newData});
-        })
+    async requestHomeHotSellData(context, params){
+        let data = await request.get(api.HOME_HOT_SELL_API);
+        let newData = data.data.categoryList.map(({categoryName, picUrl})=>({picUrl, name: categoryName}));
+        context.commit('setHotSell', {value: newData});
     },
     // 请求分类商品列表
-    requestCateListData(context, params){
-        request.get(api.HOME_CATE_LIST_API, {id: params.id})
-        .then(data=>{
-            // 处理数据
-            let url = data.data.currentCategory.bannerUrl;
-            let newData = data.data.categoryItemList.map(item=>{
-                let newItem = {
-                    title: item.category.name,
-                    subtitle: item.category.frontName,
-                    id: item.category.id
-                };
-                newItem.list = item.itemList.map(value=>{
-                    return {
-                        id: value.id,
-                        title: value.name,
-                        picUrl: value.listPicUrl,
-                        counterPrice: value.counterPrice,
-                        retailPrice: value.retailPrice,
-                        place: value.productPlace || (value.colorNum>1 ? `${value.colorNum}色可选` : ''),
-                        simpleDesc: value.simpleDesc,
-                        itemTagList: value.itemTagList.map(({name})=>name)
-                    }
-                })
-                return newItem;
-            });
-            // 提交数据
-            // 判断哪个位置调用的action
-            if(params.from === 'home'){
-                context.commit('setHomeCateBanner', {value: url});
-                context.commit('setHomeCateList', {value: newData});
-            }
-            else if(params.from === 'cate'){
-                context.commit('setCateData', {value: {
-                    banner: url,
-                    list: newData
-                }});
-            }
+    async requestCateListData(context, params){
+        
+        let data = await request.get(api.HOME_CATE_LIST_API, {id: params.id});
+        // 处理数据
+        let url = data.data.currentCategory.bannerUrl;
+        let newData = data.data.categoryItemList.map(item=>{
+            let newItem = {
+                title: item.category.name,
+                subtitle: item.category.frontName,
+                id: item.category.id
+            };
+            newItem.list = item.itemList.map(value=>{
+                return {
+                    id: value.id,
+                    title: value.name,
+                    picUrl: value.listPicUrl,
+                    counterPrice: value.counterPrice,
+                    retailPrice: value.retailPrice,
+                    place: value.productPlace || (value.colorNum>1 ? `${value.colorNum}色可选` : ''),
+                    simpleDesc: value.simpleDesc,
+                    itemTagList: value.itemTagList.map(({name})=>name)
+                }
+            })
+            return newItem;
+        });
+        // 提交数据
+        // 判断哪个位置调用的action
+        if(params.from === 'home'){
+            context.commit('setHomeCateBanner', {value: url});
+            context.commit('setHomeCateList', {value: newData});
+        }
+        else if(params.from === 'cate'){
+            context.commit('setCateData', {value: {
+                banner: url,
+                list: newData
+            }});
+        }
             
 
-        })
     }
 }
 
